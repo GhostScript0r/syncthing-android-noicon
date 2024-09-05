@@ -57,11 +57,18 @@ def get_min_sdk(project_dir):
 
 
 def get_ndk_home():
-    if not os.environ.get('ANDROID_NDK_HOME', ''):
-        if not os.environ.get('NDK_VERSION', '') or not os.environ.get('ANDROID_HOME', ''):
-            fail('ANDROID_NDK_HOME or NDK_VERSION and ANDROID_HOME environment variable must be defined')
-        return os.path.join(os.environ['ANDROID_HOME'], 'ndk', os.environ['NDK_VERSION'])
-    return os.environ['ANDROID_NDK_HOME']
+    # if not os.environ.get('ANDROID_NDK_HOME', ''):
+    #     if not os.environ.get('NDK_VERSION', '') or not os.environ.get('ANDROID_HOME', ''):
+    #         fail('ANDROID_NDK_HOME or NDK_VERSION and ANDROID_HOME environment variable must be defined')
+    #     return os.path.join(os.environ['ANDROID_HOME'], 'ndk', os.environ['NDK_VERSION'])
+    # return os.environ['ANDROID_NDK_HOME']
+    Android_NDK_Path=os.getenv('LOCALAPPDATA')+'/Android/Sdk/ndk'
+    if not os.path.exists(Android_NDK_Path):
+        fail('Android NDK path does not exist')
+    Android_NDK_Versions=os.listdir(Android_NDK_Path)
+    if len(Android_NDK_Versions) == 0:
+        fail('No Android NDK version detected')
+    return Android_NDK_Path+'/'+Android_NDK_Versions[-1]
 
 if platform.system() not in PLATFORM_DIRS:
     fail('Unsupported python platform %s. Supported platforms: %s', platform.system(),
